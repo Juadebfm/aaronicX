@@ -1,8 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import { AuthProvider } from "./context/authcontext";
+import Signup from "./pages/Signup";
+import CheckEmail from "./pages/CheckEmail";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
@@ -12,7 +14,9 @@ const App = () => {
           <Routes>
             <Route>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/check-email" element={<CheckEmail />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Routes>
         </Router>
