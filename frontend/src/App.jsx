@@ -12,12 +12,10 @@ const App = () => {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route>
-              <Route path="/" element={<Home />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/check-email" element={<CheckEmail />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/check-email" element={<CheckEmail />} />
+            <Route path="/dashboard/*" element={<Dashboard />} />
           </Routes>
         </Router>
       </AuthProvider>

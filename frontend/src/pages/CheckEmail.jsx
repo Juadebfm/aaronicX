@@ -8,7 +8,7 @@ const CheckMail = () => {
   const [isCodeWrong, setIsCodeWrong] = useState(false);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
   // Simulated correct verification code (in real app, this would come from backend)
   const CORRECT_VERIFICATION_CODE = "1234";
