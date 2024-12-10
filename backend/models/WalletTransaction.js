@@ -16,6 +16,11 @@ const walletTransactionSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    cryptocurrency: {
+      type: String,
+      required: true,
+      enum: ["BTC", "XRP", "ETH", "USDT"],
+    },
     walletAddress: {
       type: String,
       required: true,
