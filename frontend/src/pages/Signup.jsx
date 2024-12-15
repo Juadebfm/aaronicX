@@ -1,38 +1,63 @@
 import React, { useState } from "react";
-import { ChevronRight, KeyRound, Mail, User, Eye, EyeOff } from "lucide-react";
+import {
+  ChevronRight,
+  KeyRound,
+  Mail,
+  User,
+  Eye,
+  EyeOff,
+  IdCard,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
 import { useAuthContext } from "../context/authcontext";
 
 const Signup = () => {
-  const { formState, updateFormField, isFormValid, validatePassword } =
-    useAuthContext();
+  const {
+    formState,
+    updateFormField,
+    isFormValid,
+    signup,
+    validatePassword,
+    authError,
+  } = useAuthContext();
+
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    updateFormField("login", name, value);
+    updateFormField("signup", name, value);
 
     // Special handling for password to show strength
     if (name === "password") {
       const strength = validatePassword(value);
       setPasswordStrength(strength);
     }
+    console.log(formState.signup); // Debugging the form state
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement signup logic
-    console.log("Signup submitted", formState.login);
+    console.log("Signup function called"); // Add this line
+
+    await signup(); // Actually call the signup method from AuthContext
   };
 
-  const signupFormFields = ["firstname", "lastname", "email", "password"];
-  const isSignupFormValid = isFormValid("login", signupFormFields);
+  const signupFormFields = [
+    "firstname",
+    "lastname",
+    "email",
+    "password",
+    "age",
+    "nin",
+  ];
+  const isSignupFormValid = isFormValid("signup", signupFormFields);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  console.log("Is signup form valid?", isSignupFormValid);
 
   return (
     <section className="h-max px-[30px] lg:px-12 relative">
@@ -69,7 +94,7 @@ const Signup = () => {
                 id="firstname"
                 name="firstname"
                 type="text"
-                value={formState.login?.firstname || ""}
+                value={formState.signup?.firstname || ""}
                 onChange={handleInputChange}
                 placeholder="Type here"
                 className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
@@ -91,7 +116,7 @@ const Signup = () => {
                 id="lastname"
                 name="lastname"
                 type="text"
-                value={formState.login?.lastname || ""}
+                value={formState.signup?.lastname || ""}
                 onChange={handleInputChange}
                 placeholder="Type here"
                 className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
@@ -113,12 +138,57 @@ const Signup = () => {
                 id="email"
                 name="email"
                 type="email"
-                value={formState.login?.email || ""}
+                value={formState.signup?.email || ""}
                 onChange={handleInputChange}
                 placeholder="Type here"
                 className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
               />
               <Mail />
+            </div>
+          </div>
+
+          {/* Age Input */}
+          <div className="border-t py-6">
+            <label
+              htmlFor="age"
+              className="uppercase text-[12px] tracking-widest"
+            >
+              Age
+            </label>
+            <div className="flex items-center justify-between">
+              <input
+                id="age"
+                name="age"
+                type="number"
+                min="0"
+                value={formState.signup?.age || ""}
+                onChange={handleInputChange}
+                placeholder="Enter your age"
+                className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
+              />
+              <User />
+            </div>
+          </div>
+
+          {/* NIN Input */}
+          <div className="border-t py-6">
+            <label
+              htmlFor="nin"
+              className="uppercase text-[12px] tracking-widest"
+            >
+              National ID Number (NIN)
+            </label>
+            <div className="flex items-center justify-between">
+              <input
+                id="nin"
+                name="nin"
+                type="text"
+                value={formState.signup?.nin || ""}
+                onChange={handleInputChange}
+                placeholder="Enter your NIN"
+                className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
+              />
+              <IdCard />
             </div>
           </div>
 
@@ -135,7 +205,7 @@ const Signup = () => {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                value={formState.login?.password || ""}
+                value={formState.signup?.password || ""}
                 onChange={handleInputChange}
                 placeholder="Type here"
                 className="w-full ring-0 focus:outline-none active:outline-none py-2 bg-transparent focus:bg-transparent"
@@ -152,7 +222,7 @@ const Signup = () => {
             </div>
 
             {/* Password Strength Indicator */}
-            {formState.login?.password && (
+            {formState.signup?.password && (
               <div className="mt-2">
                 <div className="flex items-center space-x-2">
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -232,7 +302,11 @@ const Signup = () => {
               </div>
             )}
           </div>
-
+          {authError && (
+            <div className="text-red-500 text-sm mb-4 text-center mt-20">
+              {authError}
+            </div>
+          )}
           <div className="text-[#9397B3] mt-14 flex items-center flex-col justify-center">
             <span className="text-sm text-[#9397B3] font-extralight mt-2 space-x-1">
               <span>Already have an account?</span>
@@ -240,11 +314,10 @@ const Signup = () => {
                 Sign In
               </Link>
             </span>
-            <Button
+            <button
               type="submit"
-              btnText="SignUp Now"
               disabled={!isSignupFormValid}
-              btnClass={`
+              className={`
                 ${
                   isSignupFormValid
                     ? "bg-[#3038E5] text-white"
@@ -252,7 +325,9 @@ const Signup = () => {
                 }
                 mt-4 px-6 py-4 sm:px-8 sm:py-3 text-sm sm:text-base font-extraLight
               `}
-            />
+            >
+              Sign Up
+            </button>
           </div>
         </form>
       </div>

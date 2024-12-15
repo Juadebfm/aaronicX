@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Password strength validation function
+// Password strength validation function (unchanged)
 const validatePasswordStrength = (password) => {
   const strengths = {
     length: password.length >= 12,
@@ -44,11 +45,17 @@ const AuthContext = createContext({
       specialChars: false,
     },
   }),
+  signup: async () => {},
+  login: async () => {},
+  authError: null,
 });
 
 // AuthProvider Component
 export const AuthProvider = ({ children }) => {
-  const [formState, setFormState] = useState({});
+  const [formState, setFormState] = useState({ signup: {} });
+
+  const [authError, setAuthError] = useState(null);
+  const navigate = useNavigate();
 
   // Update a specific form field
   const updateFormField = useCallback((formName, fieldName, value) => {
@@ -92,6 +99,95 @@ export const AuthProvider = ({ children }) => {
     return validatePasswordStrength(password);
   }, []);
 
+  // Signup API call
+  const signup = async () => {
+    const signupData = formState.signup;
+
+    if (!signupData) {
+      setAuthError("Please fill out all signup fields");
+      return false;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `${signupData.firstname} ${signupData.lastname}`,
+          email: signupData.email,
+          password: signupData.password,
+          age: signupData.age || 0,
+          NIN: signupData.nin || "",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Signup API response:", response.status, result);
+
+        // Clear any previous errors
+        setAuthError(null);
+        // Navigate to login page
+        navigate("/");
+        return true;
+      } else {
+        // Handle error response
+        setAuthError(result.message || "Signup failed");
+        return false;
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      setAuthError("Network error. Please try again.");
+      return false;
+    }
+  };
+
+  // Login API call
+  const login = async () => {
+    const loginData = formState.login;
+
+    if (!loginData) {
+      setAuthError("Please fill out all login fields");
+      return false;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: loginData.username || loginData.email,
+          password: loginData.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Store token in localStorage or sessionStorage
+        localStorage.setItem("userToken", result.token);
+        // Clear any previous errors
+        setAuthError(null);
+        // Navigate to dashboard
+        navigate("/dashboard");
+        return true;
+      } else {
+        // Handle error response
+        setAuthError(result.message || "Login failed");
+        return false;
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setAuthError("Network error. Please try again.");
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -100,6 +196,9 @@ export const AuthProvider = ({ children }) => {
         isFormValid,
         resetForm,
         validatePassword,
+        signup,
+        login,
+        authError,
       }}
     >
       {children}

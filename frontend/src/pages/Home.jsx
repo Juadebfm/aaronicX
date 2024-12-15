@@ -5,17 +5,17 @@ import Button from "../components/Button";
 import { useAuthContext } from "../context/authcontext";
 
 const Login = () => {
-  const { formState, updateFormField, isFormValid } = useAuthContext();
+  const { formState, updateFormField, isFormValid, login, authError } =
+    useAuthContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     updateFormField("login", name, value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement login logic
-    console.log("Login submitted", formState.login);
+    await login(); // Actually call the login method from AuthContext
   };
 
   const loginFormFields = ["username", "password"];
@@ -97,11 +97,10 @@ const Login = () => {
                 Sign Up
               </Link>
             </span>
-            <Button
+            <button
               type="submit"
-              btnText="Login Now"
               disabled={!isLoginFormValid}
-              btnClass={`
+              className={`
                 ${
                   isLoginFormValid
                     ? "bg-[#3038E5] text-white"
@@ -109,10 +108,15 @@ const Login = () => {
                 }
                 mt-4 px-6 py-4 sm:px-8 sm:py-3 text-sm sm:text-base font-extraLight
               `}
-            />
+            >
+              Login Now
+            </button>
           </div>
         </form>
       </div>
+      {authError && (
+        <div className="text-red-500 text-sm mb-4 text-center">{authError}</div>
+      )}
     </section>
   );
 };
