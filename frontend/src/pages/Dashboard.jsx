@@ -6,11 +6,13 @@ import {
   HelpCircle,
   ChevronsLeft,
   ChevronsRight,
+  Scroll,
 } from "lucide-react";
 import { useState } from "react";
 import DashboardHome from "./DashboardHome";
 import Transactions from "./Transactions";
 import CustomerSupport from "./CustomerSupport";
+import Terms from "./Terms";
 
 const Dashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -32,6 +34,11 @@ const Dashboard = () => {
       icon: HelpCircle,
       label: "Support",
     },
+    {
+      path: "terms",
+      icon: Scroll,
+      label: "terms",
+    },
   ];
 
   const toggleSidebar = () => {
@@ -45,7 +52,7 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="h-screen flex bg-[#444CE8]">
+    <section className="h-screen overflow-hidden flex bg-[#444CE8]">
       <aside
         className={`
           bg-[#3038E5] 
@@ -60,7 +67,7 @@ const Dashboard = () => {
         `}
       >
         {/* Logo Area */}
-        <div className="h-[80px] flex items-center justify-center">
+        <div className="h-[80px] flex items-center justify-center py-20">
           {isCollapsed ? (
             <div className="text-white text-3xl font-bold">D</div>
           ) : (
@@ -131,6 +138,7 @@ const Dashboard = () => {
           <Route path="" element={<DashboardHome />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="support" element={<CustomerSupport />} />
+          <Route path="terms" element={<Terms />} />
         </Routes>
       </main>
     </section>

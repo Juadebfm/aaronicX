@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import CheckEmail from "./pages/CheckEmail";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/authcontext";
+import Terms from "./pages/Terms";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/check-email" element={<CheckEmail />} />
             <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route path="/terms" element={<Terms />} />
           </Routes>
         </AuthProvider>
       </Router>
