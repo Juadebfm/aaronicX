@@ -47,6 +47,8 @@ const AuthContext = createContext({
   }),
   signup: async () => {},
   login: async () => {},
+  logout: () => {},
+  isAuthenticated: () => false,
   authError: null,
 });
 
@@ -99,6 +101,22 @@ export const AuthProvider = ({ children }) => {
     return validatePasswordStrength(password);
   }, []);
 
+  // Logout functionality
+  const logout = useCallback(() => {
+    // Clear local storage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userData");
+
+    // Navigate to login page
+    navigate("/");
+  }, [navigate]);
+
+  // Check if user is authenticated
+  const isAuthenticated = useCallback(() => {
+    return !!localStorage.getItem("accessToken");
+  }, []);
+
   // Signup API call
   const signup = async () => {
     const signupData = formState.signup;
@@ -145,7 +163,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login API call
+  // Modify login method to store user data
   const login = async () => {
     const loginData = formState.login;
 
@@ -168,11 +186,17 @@ export const AuthProvider = ({ children }) => {
 
       const result = await response.json();
 
-      if (response.ok) {
-        // Store token in localStorage or sessionStorage
-        localStorage.setItem("userToken", result.token);
+      if (result.success) {
+        // Store access and refresh tokens
+        localStorage.setItem("accessToken", result.tokens.accessToken);
+        localStorage.setItem("refreshToken", result.tokens.refreshToken);
+
+        // Store user data
+        localStorage.setItem("userData", JSON.stringify(result.user));
+
         // Clear any previous errors
         setAuthError(null);
+
         // Navigate to dashboard
         navigate("/dashboard");
         return true;
@@ -188,6 +212,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getUserData = () => {
+    const userData = localStorage.getItem("userData");
+    return userData ? JSON.parse(userData) : null;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -198,7 +227,10 @@ export const AuthProvider = ({ children }) => {
         validatePassword,
         signup,
         login,
+        logout,
         authError,
+        isAuthenticated,
+        getUserData,
       }}
     >
       {children}
@@ -213,4 +245,18 @@ export const useAuthContext = () => {
     throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
+};
+
+// Create a ProtectedRoute component
+export const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthContext();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
+  return isAuthenticated() ? children : null;
 };

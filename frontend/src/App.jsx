@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import CheckEmail from "./pages/CheckEmail";
 import Dashboard from "./pages/Dashboard";
-import { AuthProvider } from "./context/authcontext";
+import { AuthProvider, ProtectedRoute } from "./context/authcontext";
 import Terms from "./pages/Terms";
 
 const App = () => {
@@ -16,7 +16,14 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/check-email" element={<CheckEmail />} />
-            <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route
+              path="/dashboard/*"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/terms" element={<Terms />} />
           </Routes>
         </AuthProvider>

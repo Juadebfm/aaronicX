@@ -13,10 +13,15 @@ import DashboardHome from "./DashboardHome";
 import Transactions from "./Transactions";
 import CustomerSupport from "./CustomerSupport";
 import Terms from "./Terms";
+import { useAuthContext } from "../context/authcontext";
 
 const Dashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { logout, getUserData } = useAuthContext();
+  const userData = getUserData();
+
+  console.log(userData);
 
   const navLinks = [
     {
@@ -102,6 +107,8 @@ const Dashboard = () => {
               {!isCollapsed && <span>{link.label}</span>}
             </Link>
           ))}
+
+          <button onClick={logout}>Logout</button>
         </nav>
       </aside>
 
