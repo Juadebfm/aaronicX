@@ -16,7 +16,7 @@ const Terms = () => {
           onClick={handleGoBack}
           className="cursor-pointer hover:opacity-70 transition-opacity duration-300"
         />
-        <span className="block">Terms Of Use</span>
+        <span className="block font-bold text-xl capitalize">Terms Of Use</span>
         <CircleHelp className="text-white bg-gray-500 rounded-full" />
       </div>
       <p className="font-light px-0 lg:px-5 mt-10 text-[#1E2240] space-y-5">
@@ -25,9 +25,9 @@ const Terms = () => {
           wallet.
         </span>
         <span className="block">
-          The software does not constitute an account where the developer of
-          this software or any third party serves as a financial intermediary or
-          a custodian of the coins, bytes or other valuables.
+          The software does constitute as an account where the developer of this
+          software or any third party serves as a financial intermediary or a
+          custodian of the coins, bytes or other valuables.
         </span>
         <span className="block">
           While the software has undergone beta testing and continues to be
@@ -35,7 +35,7 @@ const Terms = () => {
           no bugs in the software.
         </span>
         <span className="block">
-          You acknowledge that Your use of this software is at Your discretion
+          You acknowledge that your use of this software is at your discretion
           and in compliance with all applicable laws.
         </span>
         <span className="block">
@@ -79,6 +79,47 @@ const Terms = () => {
           You assume any and all risks associated with the use of the software.
         </span>
         <span className="block">
+          <span className="uppercase font-bold">
+            Transaction Gas Fees & Processing Fees
+          </span>
+          <ul className="list-disc pl-8">
+            <li>
+              <span className="font-bold capitalize mr-2">
+                Platform or Service Provider:
+              </span>
+              Different escrow platforms have their own fee structures. For
+              Dagcoin we charge a flat fee for transactions below 7,921 pounds
+              of 950 pounds a percentage of the transaction amount and a one
+              time percentile fee of 7% of total transactions for values above
+              50,000 pounds
+            </li>
+            <li>
+              <span className="font-bold capitalize mr-2">
+                Blockchain Network Fees:
+              </span>
+              We operate on both Ethereum and Bitcoin blockchain hence gas fees
+              are influenced by the network's congestion and the computational
+              power needed to process the transaction. On Ethereum, gas fees can
+              range from a few cents to hundreds of pounds during peak
+              congestion.
+            </li>
+            <li>
+              <span className="font-bold capitalize mr-2">
+                Transaction Type:
+              </span>
+              The complexity of the transaction (e.g., simple transfer vs. smart
+              contract execution) also affects gas fees.
+            </li>
+            <li>
+              <span className="font-bold capitalize mr-2">
+                Additional Service Fees:
+              </span>
+              We may layer our service fees on top of the blockchain gas fees
+              especially for values coming from a flagged an disputed account.
+            </li>
+          </ul>
+        </span>
+        <span className="block italic font-bold">
           We reserve the right to modify these terms from time to time.
         </span>
       </p>

@@ -7,6 +7,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Scroll,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import DashboardHome from "./DashboardHome";
@@ -72,7 +73,7 @@ const Dashboard = () => {
         `}
       >
         {/* Logo Area */}
-        <div className="h-[80px] flex items-center justify-center py-20">
+        <div className="h-[80px] flex items-center justify-center py-10">
           {isCollapsed ? (
             <div className="text-white text-3xl font-bold">D</div>
           ) : (
@@ -92,7 +93,7 @@ const Dashboard = () => {
               to={`/dashboard/${link.path}`}
               className={`
                 flex 
-                items-center 
+                items-center
                 p-2 
                 rounded-md 
                 transition-all 
@@ -108,7 +109,17 @@ const Dashboard = () => {
             </Link>
           ))}
 
-          <button onClick={logout}>Logout</button>
+          <button
+            onClick={logout}
+            className="text-[#648CFF] hover:bg-white/10 flex 
+                items-center 
+                p-2 
+                rounded-md 
+                transition-all "
+          >
+            <LogOut className="w-6 h-6 mr-3" />
+            {!isCollapsed && <span>Logout</span>}
+          </button>
         </nav>
       </aside>
 
