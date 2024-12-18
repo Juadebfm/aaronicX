@@ -61,8 +61,16 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user and select password
-    const user = await User.findOne({ email }).select("+password");
+    // Find user and select password, then populate transaction history
+    const user = await User.findOne({ email })
+      .select("+password")
+      .populate({
+        path: "transactionHistory",
+        model: "WalletTransaction",
+        options: {
+          sort: { createdAt: -1 },
+        },
+      });
 
     if (!user) {
       return res.status(401).json({
@@ -85,7 +93,22 @@ exports.login = async (req, res) => {
     const accessToken = generateToken(user, "access");
     const refreshToken = generateToken(user, "refresh");
 
-    // Return all fields except password
+    // Prepare user object without password
+    const userResponse = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      age: user.age,
+      profileImage: user.profileImage,
+      NIN: user.NIN,
+      balance: user.balance,
+      cryptoCoins: user.cryptoCoins,
+      transactionHistory: user.transactionHistory,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -93,20 +116,7 @@ exports.login = async (req, res) => {
         accessToken,
         refreshToken,
       },
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        age: user.age,
-        profileImage: user.profileImage,
-        NIN: user.NIN,
-        balance: user.balance,
-        cryptoCoins: user.cryptoCoins,
-        transactionHistory: user.transactionHistory,
-        isActive: user.isActive,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      },
+      user: userResponse,
     });
   } catch (error) {
     res.status(500).json({

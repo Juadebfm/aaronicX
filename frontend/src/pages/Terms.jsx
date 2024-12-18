@@ -16,7 +16,7 @@ const Terms = () => {
           onClick={handleGoBack}
           className="cursor-pointer hover:opacity-70 transition-opacity duration-300"
         />
-        <span className="block font-bold text-xl capitalize">Terms Of Use</span>
+        <h2 className="block font-bold text-2xl capitalize">Terms Of Use</h2>
         <CircleHelp className="text-white bg-gray-500 rounded-full" />
       </div>
       <p className="font-light px-0 lg:px-5 mt-10 text-[#1E2240] space-y-5">

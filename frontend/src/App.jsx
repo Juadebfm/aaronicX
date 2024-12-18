@@ -9,7 +9,7 @@ import Terms from "./pages/Terms";
 
 const App = () => {
   return (
-    <div className="font-figtree">
+    <div>
       <Router>
         <AuthProvider>
           <Routes>
