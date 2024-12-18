@@ -152,7 +152,7 @@ const Dashboard = () => {
           ${
             isMobile
               ? "top-8 right-4 bg-white"
-              : "top-1/2 left-4 shadow-md shadow-gray-500/50 hover:shadow-gray-100 duration-300 -translate-y-1/2 bg-[#3038E5]"
+              : "top-1/2 left-4 shadow-md shadow-gray-500/50 hover:shadow-gray-100 duration-300 mt-16 -translate-y-1/2 bg-[#3038E5]"
           }
           text-white 
           p-2 

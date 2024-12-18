@@ -97,7 +97,7 @@ const DashboardHome = () => {
       </div>
 
       <div className="mt-7 lg:mt-16">
-        <span className="flex items-center justify-start gap-2">
+        <span className="flex items-center justify-center gap-2">
           <span className="font-bold"> Your Crypto Balance</span>
         </span>
         <div className="flex flex-col items-center justify-between">

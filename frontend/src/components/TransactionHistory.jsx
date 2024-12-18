@@ -204,7 +204,7 @@ const TransactionHistory = ({ transactions }) => {
       </div>
 
       {/* Scrollable transaction list */}
-      <div className="max-h-[350px] lg:max-h-[400px] overflow-y-auto pb-20">
+      <div className="max-h-[350px] lg:max-h-[300px] overflow-y-auto pb-20">
         {filteredTransactions.length === 0 ? (
           <div className="text-center text-gray-500 py-10">
             No transactions found
