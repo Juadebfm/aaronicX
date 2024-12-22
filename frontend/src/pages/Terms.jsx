@@ -10,119 +10,112 @@ const Terms = () => {
   };
 
   return (
-    <section className="h-full overflow-y-auto bg-white rounded-lg p-[20px] md:p-14 lg:p-20">
-      <div className="flex items-center justify-between text-[#3038E5] text-[19px] mt-3">
+    <section className="h-full overflow-y-auto bg-white rounded-lg p-6 md:p-14 lg:p-20 pt-32 lg:pt-16">
+      <div className="flex items-center justify-between text-blue-600 text-lg mb-8">
         <ChevronLeft
           onClick={handleGoBack}
           className="cursor-pointer hover:opacity-70 transition-opacity duration-300"
         />
-        <h2 className="block font-bold text-2xl capitalize">Terms Of Use</h2>
+        <h1 className="font-bold text-xl">Terms of Use</h1>
         <CircleHelp className="text-white bg-gray-500 rounded-full" />
       </div>
-      <p className="font-light px-0 lg:px-5 mt-10 text-[#1E2240] space-y-5">
-        <span className="block">
-          Dagcoin wallet is a free, open source, multi-signature escrow digital
-          wallet.
-        </span>
-        <span className="block">
-          The software does constitute as an account where the developer of this
-          software or any third party serves as a financial intermediary or a
-          custodian of the coins, bytes or other valuables.
-        </span>
-        <span className="block">
-          While the software has undergone beta testing and continues to be
-          improved and further developed, we cannot guarantee that there will be
-          no bugs in the software.
-        </span>
-        <span className="block">
-          You acknowledge that your use of this software is at your discretion
-          and in compliance with all applicable laws.
-        </span>
-        <span className="block">
-          You are responsible for safekeeping Your passwords, private key pairs,
-          PINs and any other codes You use to access the software.
-        </span>
-        <span className="block">
-          If You lose access to Your Dagcoin wallet, You acknowledge and agree
-          that any coins, bytes or other valuables You have associated with that
-          Dagcoin wallet will become inaccessible.
-        </span>
-        <span className="block">
-          If this device gets replaced or this app deleted, the funds in the
-          wallet can be recovered only with a backup, which should be created
-          right after installation.
-        </span>
-        <span className="block">
-          All transaction requests are irreversible.
-        </span>
-        <span className="block">
-          The authors of the software cannot retrieve your private keys or
-          passwords if you lose or forget them and cannot guarantee transaction
-          confirmation as they do not have control over the Dagcoin network.
-        </span>
-        <span className="block">
-          To the fullest extent permitted by law, this software is provided “as
-          is” and no representations or warranties can be made of any kind,
-          express or implied, including but not limited to the warranties of
-          merchantability, fitness for a particular purpose and noninfringement.
-        </span>
-        <span className="block">
-          The funds are held securely on this device, not by the company.
-        </span>
-        <span className="block">
-          In no event shall the developers of the software be liable for any
-          claim, damages or other liability, whether in an action of contract,
-          tort or otherwise, arising from, out of or in connection with the
-          software or the use of the software.
-        </span>
-        <span className="block">
-          You assume any and all risks associated with the use of the software.
-        </span>
-        <span className="block">
-          <span className="uppercase font-bold">
-            Transaction Gas Fees & Processing Fees
-          </span>
-          <ul className="list-disc pl-8">
+
+      <div className="space-y-6 text-gray-800">
+        <div className="mb-8">
+          <h2 className="font-semibold text-xl mb-4">
+            Welcome to Dagcoin Wallet
+          </h2>
+          <p className="mb-4">
+            Dagcoin Wallet is your free, open-source digital wallet with
+            multi-signature escrow capabilities. We've designed it to give you
+            complete control over your digital assets.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="font-semibold text-xl mb-4">
+            Your Wallet, Your Responsibility
+          </h2>
+          <ul className="space-y-4 list-disc pl-6">
             <li>
-              <span className="font-bold capitalize mr-2">
-                Platform or Service Provider:
-              </span>
-              Different escrow platforms have their own fee structures. For
-              Dagcoin we charge a flat fee for transactions below 7,921 pounds
-              of 950 pounds a percentage of the transaction amount and a one
-              time percentile fee of 7% of total transactions for values above
-              50,000 pounds
+              Unlike a bank, your money isn't stored on our servers - it's
+              safely encrypted on this device and other shared devices only
             </li>
             <li>
-              <span className="font-bold capitalize mr-2">
-                Blockchain Network Fees:
-              </span>
-              We operate on both Ethereum and Bitcoin blockchain hence gas fees
-              are influenced by the network's congestion and the computational
-              power needed to process the transaction. On Ethereum, gas fees can
-              range from a few cents to hundreds of pounds during peak
-              congestion.
+              You have full control over your passwords, private keys, and PINs
             </li>
             <li>
-              <span className="font-bold capitalize mr-2">
-                Transaction Type:
-              </span>
-              The complexity of the transaction (e.g., simple transfer vs. smart
-              contract execution) also affects gas fees.
+              Create a backup immediately after registration - it's essential
+              for fund recovery
             </li>
-            <li>
-              <span className="font-bold capitalize mr-2">
-                Additional Service Fees:
-              </span>
-              We may layer our service fees on top of the blockchain gas fees
-              especially for values coming from a flagged an disputed account.
-            </li>
+            <li>* All transactions are permanent and cannot be reversed</li>
           </ul>
-        </span>
-        <span className="block italic font-bold">
-          We reserve the right to modify these terms from time to time.
-        </span>
-      </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="font-semibold text-xl mb-4">Fees and Charges</h2>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <span className="font-semibold min-w-max lg:min-w-48 mr-2">
+                  Platform Fee:
+                </span>
+                <span>
+                  5% for transactions above £50,000
+                  <ul className="mt-2 ml-4 text-sm text-gray-600">
+                    <li>• 1% Network gas fee</li>
+                    <li>• 2% Escrow merchant fee</li>
+                    <li>• 2% Service fee</li>
+                  </ul>
+                  <br />
+                  3.5% for transactions below £50,000
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="font-semibold min-w-max lg:min-w-48 mr-2">
+                  Network Fees:
+                </span>
+                <span>
+                  Variable gas fees based on Ethereum and Bitcoin network
+                  congestion
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="font-semibold min-w-max lg:min-w-48 mr-2">
+                  Special Cases:
+                </span>
+                <span>
+                  Additional fees may apply for flagged or disputed accounts
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="font-semibold text-xl mb-4">Important Disclaimers</h2>
+          <ul className="space-y-4 pl-6 list-disc">
+            <li>
+              While thoroughly tested, we cannot guarantee the software is
+              entirely bug-free
+            </li>
+            <li>We cannot recover your private keys or passwords if lost</li>
+            <li>
+              We don't control the Dagcoin network or transaction confirmations
+            </li>
+            <li>The software is provided "as is" without warranties</li>
+            <li>You accept all risks associated with using this software</li>
+          </ul>
+        </div>
+
+        <div className="mt-8 border-t pt-6">
+          <p className="font-semibold text-sm text-gray-600">
+            We may update these terms periodically. By continuing to use Dagcoin
+            Wallet, you agree to be bound by the most recent version of these
+            terms.
+          </p>
+        </div>
+      </div>
     </section>
   );
 };

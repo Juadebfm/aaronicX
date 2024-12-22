@@ -1,8 +1,27 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   <Link
+          to="https://swipex.com/"
+          target="_blank"
+          className="bg-[#424EF2] h-[340px] rounded-xl cursor-pointer hover:shadow-lg hover:shadow-gray-300/20 border border-[#3038E5] duration-300 transition-all flex flex-col items-center justify-between py-7 px-14"
+        >
+          
+        </Link>
+        <Link
+          to="/redeem-card"
+          className="bg-[#424EF2] h-[340px] rounded-xl cursor-pointer hover:shadow-lg hover:shadow-gray-300/20 border border-[#3038E5] duration-300 transition-all flex flex-col items-center justify-between py-7 px-14"
+        >
+          
+        </Link>
+        <Link
+          to="https://card.dagcoin.org/"
+          target="_blank"
+          className="bg-[#424EF2] h-[340px] rounded-xl cursor-pointer hover:shadow-lg hover:shadow-gray-300/20 border border-[#3038E5] duration-300 transition-all flex flex-col items-center justify-between py-7 px-14"
+        >
+          
+        </Link>
+        <Link
+          to="https://card.dagcoin.org/"
+          target="_blank"
+          className="bg-[#424EF2] h-[340px] rounded-xl cursor-pointer hover:shadow-lg hover:shadow-gray-300/20 border border-[#3038E5] duration-300 transition-all flex flex-col items-center justify-between py-7 px-14"
+        >
+          
+        </Link>

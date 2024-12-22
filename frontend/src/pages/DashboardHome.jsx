@@ -9,6 +9,10 @@ import {
   X,
 } from "lucide-react";
 import TransactionHistory from "../components/TransactionHistory";
+import DepositButton from "../components/DepositButton";
+import WithdrawModals from "../components/WithdrawModals";
+import WithdrawButton from "../components/WithdrawButton";
+import BalanceDisplay from "../components/BalanceDisplay";
 
 const DashboardHome = () => {
   const { getUserData } = useAuthContext();
@@ -75,15 +79,15 @@ const DashboardHome = () => {
 
   return (
     <section className="px-[30px] md:px-14 lg:px-20 py-14 text-white mt-14 lg:mt-0">
-      <div className="flex flex-col lg:flex-row lg:items-center items-start justify-between">
+      <div className="flex flex-col lg:flex-row items-center justify-between">
         <p className="hidden lg:block text-lg">
-          Hey {capitalizedFirstName}!,
+          Hey {capitalizedFirstName}!
           <span className="text-white/50 ml-2">What do you want today?</span>
         </p>
 
         <div className="flex items-center justify-center gap-2 mt-3 lg:mt-0 text-[12px] text-white/70 lg:text-base">
           <span>Balance in pounds: </span>
-          <div className="flex items-center">
+          <div className="flex justify-center items-center">
             <PoundSterling className="mr-1 font-bold" size={13} />
             <span>
               {(user.balance * conversionRate).toLocaleString("en-GB", {
@@ -101,27 +105,15 @@ const DashboardHome = () => {
           <span className="font-bold"> Your Crypto Balance</span>
         </span>
         <div className="flex flex-col items-center justify-between">
-          <div className="text-[50px] flex items-center">
-            <DollarSign className="mr-1" />
-            <span className="tracking-wide font-extralight">
-              {user.balance.toLocaleString()}
-            </span>
-            <Bitcoin className="border border-white/60 rounded-full p-1 mt-4 ml-2 font-bold" />
-          </div>
+          <BalanceDisplay />
 
           <div className="flex items-center gap-5">
-            <button className="mt-4 px-6 py-4 sm:px-8 sm:py-3 text-sm sm:text-base font-extraLight bg-white text-[#3038E5] rounded-2xl w-[158px] h-[52px]">
-              Deposit
-            </button>
-            <button className="mt-4 px-6 py-4 sm:px-8 sm:py-3 text-sm sm:text-base font-extraLight bg-white text-[#3038E5] rounded-2xl w-[158px] h-[52px]">
-              Withdraw
-            </button>
+            <DepositButton />
+            <WithdrawButton />
           </div>
+          <WithdrawModals />
         </div>
         <div className="mt-7 lg:mt-14 relative">
-          <div className="rounded-b-3xl flex items-center justify-between h-[76px] absolute -top-1 left-0 w-full bg-[#3038E5] px-10 z-10">
-            <span className="font-light"> Transactions</span>
-          </div>
           <TransactionHistory
             transactions={user.transactionHistory}
             searchTerm={searchTerm}

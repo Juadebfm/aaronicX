@@ -181,14 +181,14 @@ const TransactionHistory = ({ transactions }) => {
   );
 
   return (
-    <div className="bg-white rounded-b-3xl p-6 relative">
+    <div className="bg-white rounded-b-3xl relative flex flex-col h-[calc(100vh-350px)] lg:h-[calc(100vh-100px)] min-h-[200px] max-h-[500px] w-full mx-auto">
       {/* Search and Filter Bar */}
-      <div className="mt-16 lg:mt-20 mb-6 relative">
+      <div className="px-4 lg:px-6 pt-6 pb-4 sticky top-0 bg-white z-10 rounded-t-3xl">
         <div className="relative">
           <input
             type="text"
             placeholder="Search transactions..."
-            className="w-full pl-10 pr-4 py-2 border rounded-lg text-[#3038E5] focus:border-[#3038E5] focus:outline-[#3038E5] active:border-[#3038E5]"
+            className="w-full pl-10 pr-12 py-2 border rounded-lg text-[#3038E5] focus:border-[#3038E5] focus:outline-[#3038E5] active:border-[#3038E5]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -204,7 +204,7 @@ const TransactionHistory = ({ transactions }) => {
       </div>
 
       {/* Scrollable transaction list */}
-      <div className="max-h-[350px] lg:max-h-[300px] overflow-y-auto pb-20">
+      <div className="flex-grow overflow-y-auto px-4 lg:px-6 pb-6">
         {filteredTransactions.length === 0 ? (
           <div className="text-center text-gray-500 py-10">
             No transactions found
