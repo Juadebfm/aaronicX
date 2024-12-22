@@ -27,7 +27,7 @@ const Login = () => {
         <img
           src="/dagcoin.png"
           alt="DagCoin Logo"
-          className="w-[120px] h-[56px]"
+          className="w-max h-[56px]"
         />
       </div>
       <div className="flex flex-col items-center justify-center py-32 min-h-screen">
