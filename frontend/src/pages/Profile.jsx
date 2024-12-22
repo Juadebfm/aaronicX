@@ -64,11 +64,18 @@ const Profile = () => {
       <div className="flex flex-col items-center gap-4 mt-14">
         {/* Avatar with fallback */}
         {user.profileImage !== "default-profile.png" ? (
-          <img
-            src={user.profileImage}
-            alt={user.name}
-            className="h-24 w-24 rounded-full border-2 border-white object-cover"
-          />
+          <div className="relative">
+            <img
+              src={user.profileImage}
+              alt={user.name}
+              className="h-28 w-28 rounded-full border-4 border-white object-cover"
+            />
+            <img
+              src="/ON.png"
+              alt=""
+              className="w-7 h-7 absolute bottom-[-8px] left-1/2 transform -translate-x-1/2"
+            />
+          </div>
         ) : (
           <div className="h-24 w-24 rounded-full relative bg-gray-500 border-4 border-white flex items-center justify-center text-white text-xl">
             <span>{getInitials(user.name)}</span>

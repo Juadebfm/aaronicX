@@ -83,6 +83,11 @@ const Login = () => {
               <KeyRound />
             </div>
           </div>
+          {authError && (
+            <div className="text-red-500 font-bold capitalize text-sm mb-4 text-center mt-14">
+              {authError}
+            </div>
+          )}
 
           <div className="text-[#9397B3] mt-14 flex items-center flex-col justify-center">
             <span className="flex items-center justify-center gap-1">
@@ -97,6 +102,7 @@ const Login = () => {
                 Sign Up
               </Link>
             </span>
+
             <button
               type="submit"
               disabled={!isLoginFormValid}
@@ -114,9 +120,6 @@ const Login = () => {
           </div>
         </form>
       </div>
-      {authError && (
-        <div className="text-red-500 text-sm mb-4 text-center">{authError}</div>
-      )}
     </section>
   );
 };

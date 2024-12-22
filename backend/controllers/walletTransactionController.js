@@ -20,39 +20,42 @@ exports.addTransaction = async (req, res) => {
         .json({ success: false, message: "Amount must be greater than zero" });
     }
 
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
+    // Find and update in one atomic operation
+    const updateOperation = type === "received" ? amount : -amount;
 
-    // Find or create cryptocurrency entry in cryptoCoins array
-    let cryptoCoinEntry = user.cryptoCoins.find(
-      (coin) => coin.coinName === cryptocurrency
+    const updatedUser = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        // If type is "sent", ensure sufficient balance exists
+        ...(type === "sent" && {
+          cryptoCoins: {
+            $elemMatch: {
+              coinName: cryptocurrency,
+              amount: { $gte: amount },
+            },
+          },
+        }),
+      },
+      {
+        $inc: { balance: updateOperation },
+        $inc: { "cryptoCoins.$[coin].amount": updateOperation },
+      },
+      {
+        arrayFilters: [{ "coin.coinName": cryptocurrency }],
+        new: true, // Return updated document
+        upsert: true, // Create if doesn't exist
+        runValidators: true,
+      }
     );
 
-    if (!cryptoCoinEntry) {
-      // If cryptocurrency doesn't exist, create a new entry
-      cryptoCoinEntry = { coinName: cryptocurrency, amount: 0 };
-      user.cryptoCoins.push(cryptoCoinEntry);
-    }
-
-    // Update cryptocurrency amount based on transaction type
-    if (type === "sent") {
-      if (cryptoCoinEntry.amount < amount) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: "Insufficient cryptocurrency balance",
-          });
-      }
-      cryptoCoinEntry.amount -= amount;
-      user.balance -= amount;
-    } else if (type === "received") {
-      cryptoCoinEntry.amount += amount;
-      user.balance += amount;
+    if (!updatedUser) {
+      return res.status(400).json({
+        success: false,
+        message:
+          type === "sent"
+            ? "Insufficient cryptocurrency balance"
+            : "User not found",
+      });
     }
 
     const transaction = await WalletTransaction.create({
@@ -64,16 +67,16 @@ exports.addTransaction = async (req, res) => {
     });
 
     // Add transaction ID to user's transaction history
-    user.transactionHistory.push(transaction._id);
-
-    await user.save();
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { transactionHistory: transaction._id },
+    });
 
     res.status(201).json({
       success: true,
       message: "Transaction recorded successfully",
       transaction,
-      balance: user.balance,
-      cryptoCoins: user.cryptoCoins,
+      balance: updatedUser.balance,
+      cryptoCoins: updatedUser.cryptoCoins,
     });
   } catch (error) {
     res

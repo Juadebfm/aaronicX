@@ -127,19 +127,22 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: `${signupData.firstname} ${signupData.lastname}`,
-          email: signupData.email,
-          password: signupData.password,
-          age: signupData.age || 0,
-          NIN: signupData.nin || "",
-        }),
-      });
+      const response = await fetch(
+        "https://payment-gray-phi.vercel.app/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: `${signupData.firstname} ${signupData.lastname}`,
+            email: signupData.email,
+            password: signupData.password,
+            age: signupData.age || 0,
+            NIN: signupData.nin || "",
+          }),
+        }
+      );
 
       const result = await response.json();
 
@@ -173,16 +176,19 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: loginData.username || loginData.email,
-          password: loginData.password,
-        }),
-      });
+      const response = await fetch(
+        "https://payment-gray-phi.vercel.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: loginData.username || loginData.email,
+            password: loginData.password,
+          }),
+        }
+      );
 
       const result = await response.json();
 
