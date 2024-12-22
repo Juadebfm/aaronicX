@@ -14,12 +14,20 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://dagcoin-web.vercel.app"], // Allow only your frontend origin
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true, // Enable cookies and credentials
+  })
+);
 app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
+app.options("*", cors());
 
 // Error handling middleware
 app.use((err, req, res, next) => {
