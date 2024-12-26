@@ -20,6 +20,7 @@ import { useAuthContext } from "../context/authcontext";
 import GetCoins from "./Get-Coins";
 import RedeemCard from "./RedeemCard";
 import Profile from "./Profile";
+import LoginHistory from "./LoginHistory";
 
 const Dashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -56,6 +57,7 @@ const Dashboard = () => {
     { path: "transactions", icon: CreditCard, label: "Transactions" },
     { path: "get-coins", icon: HandCoins, label: "Get Coins" },
     { path: "terms", icon: Scroll, label: "Terms" },
+    { path: "login-history", icon: Scroll, label: "Login History" },
   ];
 
   const toggleSidebar = () => {
@@ -211,6 +213,7 @@ const Dashboard = () => {
           <Route path="get-coins/redeem-card" element={<RedeemCard />} />
           <Route path="terms" element={<Terms />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="login-history" element={<LoginHistory />} />
         </Routes>
       </main>
 
