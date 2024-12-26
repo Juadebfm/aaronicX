@@ -20,13 +20,14 @@ exports.addTransaction = async (req, res) => {
         .json({ success: false, message: "Amount must be greater than zero" });
     }
 
-    // Find and update in one atomic operation
+    // Calculate operation amount (positive for received, negative for sent)
     const updateOperation = type === "received" ? amount : -amount;
 
+    // Find user and update balances atomically
     const updatedUser = await User.findOneAndUpdate(
       {
         _id: req.user.id,
-        // If type is "sent", ensure sufficient balance exists
+        // For "sent" transactions, verify sufficient balance
         ...(type === "sent" && {
           cryptoCoins: {
             $elemMatch: {
@@ -37,13 +38,14 @@ exports.addTransaction = async (req, res) => {
         }),
       },
       {
-        $inc: { balance: updateOperation },
-        $inc: { "cryptoCoins.$[coin].amount": updateOperation },
+        $inc: {
+          "cryptoCoins.$[coin].amount": updateOperation,
+          totalBalance: updateOperation, // Assuming you have a totalBalance field in your User model
+        },
       },
       {
         arrayFilters: [{ "coin.coinName": cryptocurrency }],
-        new: true, // Return updated document
-        upsert: true, // Create if doesn't exist
+        new: true,
         runValidators: true,
       }
     );
@@ -58,6 +60,7 @@ exports.addTransaction = async (req, res) => {
       });
     }
 
+    // Create transaction record
     const transaction = await WalletTransaction.create({
       user: req.user.id,
       type,
@@ -66,7 +69,7 @@ exports.addTransaction = async (req, res) => {
       walletAddress,
     });
 
-    // Add transaction ID to user's transaction history
+    // Add transaction ID to user's history
     await User.findByIdAndUpdate(req.user.id, {
       $push: { transactionHistory: transaction._id },
     });
@@ -75,13 +78,16 @@ exports.addTransaction = async (req, res) => {
       success: true,
       message: "Transaction recorded successfully",
       transaction,
-      balance: updatedUser.balance,
+      balance: updatedUser.totalBalance, // Make sure you're returning the correct balance field
       cryptoCoins: updatedUser.cryptoCoins,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: error.message });
+    console.error("Transaction Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
 
