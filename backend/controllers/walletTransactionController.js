@@ -6,41 +6,51 @@ exports.addTransaction = async (req, res) => {
   try {
     const { type, amount, walletAddress, cryptocurrency } = req.body;
 
-    // Validate transaction type
+    // Validation checks
     if (!["sent", "received"].includes(type)) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid transaction type" });
     }
 
-    // Validate amount
     if (amount <= 0) {
       return res
         .status(400)
         .json({ success: false, message: "Amount must be greater than zero" });
     }
 
-    // Calculate operation amount (positive for received, negative for sent)
     const updateOperation = type === "received" ? amount : -amount;
 
-    // Find user and update balances atomically
+    // First, get the current user to check balances
+    const currentUser = await User.findById(req.user.id);
+    if (!currentUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // For "sent" transactions, verify sufficient balance
+    if (type === "sent") {
+      const cryptoCoin = currentUser.cryptoCoins.find(
+        (coin) => coin.coinName === cryptocurrency
+      );
+      if (!cryptoCoin || cryptoCoin.amount < amount) {
+        return res.status(400).json({
+          success: false,
+          message: "Insufficient cryptocurrency balance",
+        });
+      }
+    }
+
+    // Update both balances atomically
     const updatedUser = await User.findOneAndUpdate(
       {
         _id: req.user.id,
-        // For "sent" transactions, verify sufficient balance
-        ...(type === "sent" && {
-          cryptoCoins: {
-            $elemMatch: {
-              coinName: cryptocurrency,
-              amount: { $gte: amount },
-            },
-          },
-        }),
       },
       {
         $inc: {
-          "cryptoCoins.$[coin].amount": updateOperation,
-          totalBalance: updateOperation, // Assuming you have a totalBalance field in your User model
+          balance: updateOperation, // Update main balance
+          "cryptoCoins.$[coin].amount": updateOperation, // Update crypto balance
         },
       },
       {
@@ -53,14 +63,11 @@ exports.addTransaction = async (req, res) => {
     if (!updatedUser) {
       return res.status(400).json({
         success: false,
-        message:
-          type === "sent"
-            ? "Insufficient cryptocurrency balance"
-            : "User not found",
+        message: "Failed to update user balances",
       });
     }
 
-    // Create transaction record
+    // Create and save the transaction
     const transaction = await WalletTransaction.create({
       user: req.user.id,
       type,
@@ -69,16 +76,36 @@ exports.addTransaction = async (req, res) => {
       walletAddress,
     });
 
-    // Add transaction ID to user's history
+    // Update transaction history
     await User.findByIdAndUpdate(req.user.id, {
       $push: { transactionHistory: transaction._id },
     });
+
+    // Double-check that balances match after update
+    const finalUser = await User.findById(req.user.id)
+      .populate("transactionHistory")
+      .select("-password");
+
+    // Calculate total from transaction history
+    const totalFromTransactions = finalUser.transactionHistory.reduce(
+      (acc, trans) => {
+        return acc + (trans.type === "received" ? trans.amount : -trans.amount);
+      },
+      0
+    );
+
+    // If there's a mismatch, correct it
+    if (totalFromTransactions !== finalUser.balance) {
+      await User.findByIdAndUpdate(req.user.id, {
+        balance: totalFromTransactions,
+      });
+    }
 
     res.status(201).json({
       success: true,
       message: "Transaction recorded successfully",
       transaction,
-      balance: updatedUser.totalBalance, // Make sure you're returning the correct balance field
+      balance: totalFromTransactions, // Use calculated balance
       cryptoCoins: updatedUser.cryptoCoins,
     });
   } catch (error) {
