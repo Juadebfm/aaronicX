@@ -24,11 +24,7 @@ const Login = () => {
   return (
     <section className="h-max px-[30px] lg:px-12 relative">
       <div className="grid grid-cols-1 lg:grid-cols-2 justify-center lg:justify-start items-center fixed top-0 left-0 bg-white w-full lg:w-screen py-5 lg:py-7 px-12">
-        <img
-          src="/dagcoin.png"
-          alt="DagCoin Logo"
-          className="w-max h-[56px]"
-        />
+        <img src="/dagcoin.png" alt="DagCoin Logo" className="w-max h-[56px]" />
       </div>
       <div className="flex flex-col items-center justify-center py-32 min-h-screen">
         <span className="text-[#1E2240] font-extralight uppercase pt-2">

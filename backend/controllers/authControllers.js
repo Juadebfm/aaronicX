@@ -157,3 +157,28 @@ exports.updateUser = async (req, res) => {
     });
   }
 };
+
+// Backend: Create tracking controller
+const UserActivity = {
+  trackLogin: async (req, res, next) => {
+    try {
+      const userAgent = req.headers["user-agent"];
+      const ip = req.ip || req.connection.remoteAddress;
+
+      await User.findByIdAndUpdate(req.user.id, {
+        $push: {
+          loginHistory: {
+            device: userAgent,
+            ip: ip,
+            location: req.body.location, // From frontend
+          },
+        },
+      });
+
+      next();
+    } catch (error) {
+      console.error("Login tracking error:", error);
+      next(); // Continue even if tracking fails
+    }
+  },
+};

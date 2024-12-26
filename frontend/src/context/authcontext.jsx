@@ -176,6 +176,18 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
+      // Get user location
+      let location = "Unknown";
+      try {
+        const locationData = await fetch("https://ipapi.co/json/");
+        const locationInfo = await locationData.json();
+        location = `${locationInfo.city || ""}, ${
+          locationInfo.country_name || ""
+        }`.trim();
+      } catch (error) {
+        console.error("Location fetch error:", error);
+      }
+
       const response = await fetch(
         "https://payment-gray-phi.vercel.app/api/auth/login",
         {
@@ -186,6 +198,7 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify({
             email: loginData.username || loginData.email,
             password: loginData.password,
+            location,
           }),
         }
       );
@@ -193,21 +206,34 @@ export const AuthProvider = ({ children }) => {
       const result = await response.json();
 
       if (result.success) {
-        // Store access and refresh tokens
         localStorage.setItem("accessToken", result.tokens.accessToken);
         localStorage.setItem("refreshToken", result.tokens.refreshToken);
-
-        // Store user data
         localStorage.setItem("userData", JSON.stringify(result.user));
 
-        // Clear any previous errors
-        setAuthError(null);
+        // Track login separately to ensure it completes even if tracking fails
+        try {
+          await fetch(
+            "https://payment-gray-phi.vercel.app/api/auth/track-login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${result.tokens.accessToken}`,
+              },
+              body: JSON.stringify({
+                userId: result.user.id,
+                location,
+              }),
+            }
+          );
+        } catch (trackError) {
+          console.error("Login tracking error:", trackError);
+        }
 
-        // Navigate to dashboard
+        setAuthError(null);
         navigate("/dashboard");
         return true;
       } else {
-        // Handle error response
         setAuthError(result.message || "Login failed");
         return false;
       }

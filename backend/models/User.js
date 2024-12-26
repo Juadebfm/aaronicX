@@ -64,6 +64,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    loginHistory: [
+      {
+        timestamp: { type: Date, default: Date.now },
+        device: String,
+        browser: String,
+        ip: String,
+        location: String,
+      },
+    ],
   },
   {
     timestamps: true,
