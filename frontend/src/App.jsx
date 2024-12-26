@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import { AuthProvider, ProtectedRoute } from "./context/authcontext";
 import Terms from "./pages/Terms";
 import { WithdrawProvider } from "./context/WithdrawContext";
+import LoginHistory from "./pages/LoginHistory";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <WithdrawProvider>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/login-history" element={<LoginHistory />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/check-email" element={<CheckEmail />} />
               <Route

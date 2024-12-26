@@ -7,6 +7,7 @@ const {
   protect,
   validateUpdate,
 } = require("../middleware/authMiddleware");
+const { getLoginHistory } = require("../controllers/loginHistoryController");
 const { trackLogin } = require("../middleware/trackLogin");
 
 // Signup route
@@ -16,6 +17,7 @@ router.post("/signup", validateSignup, signup);
 router.post("/login", validateLogin, login, trackLogin);
 
 router.put("/update", protect, validateUpdate, updateUser);
+router.get("/login-history", protect, getLoginHistory);
 
 // Refresh token route (to be implemented)
 router.post("/refresh-token", (req, res) => {
