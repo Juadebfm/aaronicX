@@ -96,7 +96,7 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="h-20 flex items-center justify-center py-10 mt-8">
             {isCollapsed && !isMobile ? (
-              <img src="/ON.svg" alt="" width={56} height={56} />
+              <img src="/ON.png" alt="" width={56} height={56} />
             ) : (
               <img
                 src="/dashboard-logo.png"
