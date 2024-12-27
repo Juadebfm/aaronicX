@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user and select password, then populate transaction history
+    // Find user and select password
     const user = await User.findOne({ email })
       .select("+password")
       .populate({
@@ -72,28 +72,24 @@ exports.login = async (req, res) => {
         },
       });
 
-    if (!user) {
+    if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
       });
     }
 
-    // Check password
-    const isMatch = await user.comparePassword(password);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password",
-      });
+    // Add login history entry if available from middleware
+    if (req.loginEntry) {
+      user.loginHistory.push(req.loginEntry);
+      await user.save();
     }
 
     // Generate tokens
     const accessToken = generateToken(user, "access");
     const refreshToken = generateToken(user, "refresh");
 
-    // Prepare user object without password
+    // Prepare user response with updated login history
     const userResponse = {
       id: user._id,
       name: user.name,

@@ -14,7 +14,7 @@ const { trackLogin } = require("../middleware/trackLogin");
 router.post("/signup", validateSignup, signup);
 
 // Login route
-router.post("/login", validateLogin, login, trackLogin);
+router.post("/login", validateLogin, trackLogin, login);
 
 router.put("/update", protect, validateUpdate, updateUser);
 
