@@ -25,9 +25,14 @@ const walletTransactionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    transactionDate: {
+      type: Date,
+      required: true, // Make it required
+      default: Date.now, // Fallback to current date if not provided
+    },
     timestamp: {
       type: Date,
-      default: Date.now,
+      default: Date.now, // Keep this for internal tracking
     },
   },
   {

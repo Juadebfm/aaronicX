@@ -5,7 +5,8 @@ const User = require("../models/User");
 // Add Transaction (Sent/Received)
 exports.addTransaction = async (req, res) => {
   try {
-    const { type, amount, walletAddress, cryptocurrency } = req.body;
+    const { type, amount, walletAddress, cryptocurrency, transactionDate } =
+      req.body;
 
     // Validation checks
     if (!["sent", "received"].includes(type)) {
@@ -19,6 +20,17 @@ exports.addTransaction = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Amount must be greater than zero",
+      });
+    }
+
+    // Validate transactionDate if provided
+    const validatedDate = transactionDate
+      ? new Date(transactionDate)
+      : new Date();
+    if (isNaN(validatedDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid transaction date format",
       });
     }
 
@@ -47,13 +59,14 @@ exports.addTransaction = async (req, res) => {
       }
     }
 
-    // Create the transaction first
+    // Create the transaction with the custom date
     const transaction = await WalletTransaction.create({
       user: req.user.id,
       type,
       amount,
       cryptocurrency,
       walletAddress,
+      transactionDate: validatedDate,
     });
 
     // Update user balances and add transaction to history
@@ -103,7 +116,7 @@ exports.getTransactions = async (req, res) => {
   try {
     const transactions = await WalletTransaction.find({
       user: req.user.id,
-    }).sort({ timestamp: -1 });
+    }).sort({ transactionDate: -1, timestamp: -1 }); // Sort by transactionDate first, then timestamp
 
     res.status(200).json({
       success: true,
