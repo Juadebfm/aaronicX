@@ -57,7 +57,6 @@ const Dashboard = () => {
     { path: "transactions", icon: CreditCard, label: "Transactions" },
     { path: "get-coins", icon: HandCoins, label: "Get Coins" },
     { path: "terms", icon: Scroll, label: "Terms" },
-    { path: "login-history", icon: Scroll, label: "Login History" },
   ];
 
   // chekc

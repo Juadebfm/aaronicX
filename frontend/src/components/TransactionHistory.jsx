@@ -90,7 +90,7 @@ const TransactionHistory = ({ transactions, searchTerm }) => {
                     "PPP p"
                   )}
                 </td>
-                <td className="py-4 px-4 text-sm font-medium">
+                <td className="py-4 px-4 text-sm font-medium text-[#10101a]">
                   {transaction.amount.toFixed(8)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
