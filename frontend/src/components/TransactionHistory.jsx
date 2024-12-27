@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
-import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { Bitcoin, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
 const TransactionHistory = ({ transactions, searchTerm }) => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -67,9 +67,15 @@ const TransactionHistory = ({ transactions, searchTerm }) => {
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-2">
                     {transaction.type === "received" ? (
-                      <ArrowDownLeft className="w-5 h-5 text-green-500" />
+                      <div className="flex items-center">
+                        <ArrowDownLeft className="w-5 h-5 text-green-500" />
+                        <Bitcoin className="w-4 h-4 text-green-500 ml-1" />
+                      </div>
                     ) : (
-                      <ArrowUpRight className="w-5 h-5 text-red-500" />
+                      <div className="flex items-center">
+                        <ArrowUpRight className="w-5 h-5 text-red-500" />
+                        <Bitcoin className="w-4 h-4 text-red-500 ml-1" />
+                      </div>
                     )}
                     <span
                       className={`capitalize ${
@@ -91,7 +97,7 @@ const TransactionHistory = ({ transactions, searchTerm }) => {
                   )}
                 </td>
                 <td className="py-4 px-4 text-sm font-medium text-[#10101a]">
-                  {transaction.amount.toFixed(8)}
+                  {Math.floor(transaction.amount)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   {transaction.cryptocurrency}
