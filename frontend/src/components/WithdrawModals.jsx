@@ -268,7 +268,7 @@ const WithdrawModals = () => {
           </>
         )}
 
-        <div className="absolute top-36 left-1/2 transform -translate-x-1/2 w-[90%] text-white text-lg text-center">
+        <div className="absolute top-36 left-1/2 transform -translate-x-1/2 w-[90%] text-white text-lg text-center pb-10">
           Please complete the withdrawal process before closing
         </div>
       </div>
