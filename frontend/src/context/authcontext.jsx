@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify({
             email: loginData.username || loginData.email,
             password: loginData.password,
-            location, // This will be used by the trackLogin middleware
+            location, // This will be used by trackLogin middleware
           }),
         }
       );

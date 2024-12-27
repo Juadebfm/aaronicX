@@ -2,26 +2,29 @@ const User = require("../models/User");
 
 exports.trackLogin = async (req, res, next) => {
   try {
-    console.log("Tracking login for user:", req.user.id); // Log User ID
+    console.log("Tracking login, user:", req.user); // Debug log
 
     const user = await User.findById(req.user.id);
-    console.log("User before update:", user); // Log User Data
+
+    if (!user) {
+      console.error("User not found for tracking");
+      return next();
+    }
 
     // Update login history
     user.loginHistory.push({
       timestamp: new Date(),
       device: req.headers["user-agent"] || "Unknown",
-      browser: "Chrome", // Replace with actual detection logic
-      ip: req.ip || "Unknown",
+      browser: req.headers["sec-ch-ua"] || "Unknown",
+      ip: req.ip || req.connection.remoteAddress || "Unknown",
       location: req.body.location || "Unknown",
     });
 
     await user.save();
-    console.log("Updated User:", user); // Log Updated User
-
+    console.log("Login tracked successfully");
     next();
   } catch (error) {
     console.error("Error tracking login:", error);
-    next(); // Proceed without breaking login flow
+    next();
   }
 };

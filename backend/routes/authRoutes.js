@@ -17,7 +17,6 @@ router.post("/signup", validateSignup, signup);
 router.post("/login", validateLogin, login, trackLogin);
 
 router.put("/update", protect, validateUpdate, updateUser);
-router.get("/login-history", protect, getLoginHistory);
 
 // Refresh token route (to be implemented)
 router.post("/refresh-token", (req, res) => {
