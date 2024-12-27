@@ -57,6 +57,8 @@ exports.signup = async (req, res) => {
   }
 };
 
+// Generate tokens
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password, location } = req.body;
@@ -77,8 +79,8 @@ exports.login = async (req, res, next) => {
     };
 
     const tokens = {
-      accessToken: generateAccessToken(user),
-      refreshToken: generateRefreshToken(user),
+      accessToken: generateToken(user, "access"),
+      refreshToken: generateToken(user, "refresh"),
     };
 
     // Include loginHistory in response
