@@ -57,43 +57,31 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, location } = req.body;
 
-    // Find user and select password, then populate transaction history
-    const user = await User.findOne({ email })
-      .select("+password")
-      .populate({
-        path: "transactionHistory",
-        model: "WalletTransaction",
-        options: {
-          sort: { createdAt: -1 },
-        },
-      });
+    const user = await User.findOne({ email }).select("+password");
 
-    if (!user) {
+    if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
       });
     }
 
-    // Check password
-    const isMatch = await user.comparePassword(password);
+    // Set user in request for trackLogin middleware
+    req.user = {
+      id: user._id,
+      email: user.email,
+    };
 
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password",
-      });
-    }
+    const tokens = {
+      accessToken: generateAccessToken(user),
+      refreshToken: generateRefreshToken(user),
+    };
 
-    // Generate tokens
-    const accessToken = generateToken(user, "access");
-    const refreshToken = generateToken(user, "refresh");
-
-    // Prepare user object without password
+    // Include loginHistory in response
     const userResponse = {
       id: user._id,
       name: user.name,
@@ -105,6 +93,7 @@ exports.login = async (req, res) => {
       cryptoCoins: user.cryptoCoins,
       transactionHistory: user.transactionHistory,
       isActive: user.isActive,
+      loginHistory: user.loginHistory,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -112,16 +101,16 @@ exports.login = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Login successful",
-      tokens: {
-        accessToken,
-        refreshToken,
-      },
+      tokens,
       user: userResponse,
     });
+
+    next();
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: "Server error during login",
+      message: "Error during login",
       error: error.message,
     });
   }

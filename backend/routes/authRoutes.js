@@ -10,17 +10,10 @@ const {
 const { getLoginHistory } = require("../controllers/loginHistoryController");
 const { trackLogin } = require("../middleware/trackLogin");
 
-// Signup route
+// Auth routes
 router.post("/signup", validateSignup, signup);
-
-// Login route
 router.post("/login", validateLogin, login, trackLogin);
-
 router.put("/update", protect, validateUpdate, updateUser);
-
-// Refresh token route (to be implemented)
-router.post("/refresh-token", (req, res) => {
-  // Token refresh logic will be added later
-});
+router.get("/login-history", protect, getLoginHistory);
 
 module.exports = router;
