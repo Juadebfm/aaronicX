@@ -57,33 +57,43 @@ exports.signup = async (req, res) => {
   }
 };
 
-// Generate tokens
-
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   try {
-    const { email, password, location } = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select("+password");
+    // Find user and select password, then populate transaction history
+    const user = await User.findOne({ email })
+      .select("+password")
+      .populate({
+        path: "transactionHistory",
+        model: "WalletTransaction",
+        options: {
+          sort: { createdAt: -1 },
+        },
+      });
 
-    if (!user || !(await user.comparePassword(password))) {
+    if (!user) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
       });
     }
 
-    // Set user in request for trackLogin middleware
-    req.user = {
-      id: user._id,
-      email: user.email,
-    };
+    // Check password
+    const isMatch = await user.comparePassword(password);
 
-    const tokens = {
-      accessToken: generateToken(user, "access"),
-      refreshToken: generateToken(user, "refresh"),
-    };
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
 
-    // Include loginHistory in response
+    // Generate tokens
+    const accessToken = generateToken(user, "access");
+    const refreshToken = generateToken(user, "refresh");
+
+    // Prepare user object without password
     const userResponse = {
       id: user._id,
       name: user.name,
@@ -103,16 +113,16 @@ exports.login = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Login successful",
-      tokens,
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
       user: userResponse,
     });
-
-    next();
   } catch (error) {
-    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: "Error during login",
+      message: "Server error during login",
       error: error.message,
     });
   }
