@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify({
             email: loginData.username || loginData.email,
             password: loginData.password,
-            location,
+            location, // This will be used by the trackLogin middleware
           }),
         }
       );
@@ -209,26 +209,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("accessToken", result.tokens.accessToken);
         localStorage.setItem("refreshToken", result.tokens.refreshToken);
         localStorage.setItem("userData", JSON.stringify(result.user));
-
-        // Track login separately to ensure it completes even if tracking fails
-        try {
-          await fetch(
-            "https://payment-gray-phi.vercel.app/api/auth/track-login",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${result.tokens.accessToken}`,
-              },
-              body: JSON.stringify({
-                userId: result.user.id,
-                location,
-              }),
-            }
-          );
-        } catch (trackError) {
-          console.error("Login tracking error:", trackError);
-        }
 
         setAuthError(null);
         navigate("/dashboard");
